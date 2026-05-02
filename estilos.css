@@ -74,22 +74,24 @@
   .hero {
     position: relative;
     height: 520px;
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    z-index: 10;
   }
 
   .hero-bg {
     position: absolute;
     inset: 0;
-    background: 
+    background:
       linear-gradient(135deg, rgba(15,26,20,0.85) 0%, rgba(30,58,40,0.7) 50%, rgba(15,26,20,0.9) 100%),
       url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Mapa_de_Colombia.svg/400px-Mapa_de_Colombia.svg.png');
     background-size: cover;
     background-position: center;
     filter: blur(0px);
+    overflow: hidden;
   }
 
   .hero-pattern {
@@ -403,6 +405,21 @@
 
   .form-input::placeholder { color: rgba(154,176,158,0.5); }
 
+  .form-input.invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(200,74,58,0.15);
+  }
+
+  .form-error {
+    display: none;
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--danger);
+    line-height: 1.3;
+  }
+
+  .form-error.show { display: block; }
+
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
   .form-submit {
@@ -532,6 +549,354 @@
   @keyframes fadeInUp {
     from { transform: translateY(15px); opacity: 0; }
     to   { transform: translateY(0); opacity: 1; }
+  }
+
+  /* ── BUSCADOR DE VUELOS ── */
+  .hero {
+    padding-bottom: 100px;
+  }
+
+  .search-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: calc(100% - 4rem);
+    max-width: 1180px;
+    z-index: 20;
+  }
+
+  .search-bar {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 0.6rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(200,146,58,0.15);
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+
+  .search-pill {
+    flex: 1;
+    min-width: 0;
+    background: var(--white);
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .search-pill:focus-within {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+  }
+
+  .pill-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #64748B;
+  }
+
+  .pill-icon {
+    width: 16px;
+    height: 16px;
+    color: #1E3A28;
+  }
+
+  .pill-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #64748B;
+    letter-spacing: 0.02em;
+  }
+
+  .pill-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0F172A;
+    padding: 0;
+  }
+
+  .pill-input::placeholder {
+    color: #94A3B8;
+    font-weight: 500;
+  }
+
+  .pill-select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    padding-right: 18px;
+  }
+
+  .search-swap-btn {
+    background: var(--white);
+    border: 1px solid #E2E8F0;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    align-self: center;
+    cursor: pointer;
+    color: #2563EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.25s;
+    flex-shrink: 0;
+  }
+
+  .search-swap-btn svg { width: 18px; height: 18px; }
+
+  .search-swap-btn:hover {
+    background: #EFF6FF;
+    transform: rotate(180deg);
+  }
+
+  .search-submit {
+    background: #2563EB;
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    padding: 0 1.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .search-submit:hover { background: #1D4ED8; }
+
+  .search-tipo {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 0.9rem 0.4rem 0;
+    font-size: 0.85rem;
+    color: var(--white);
+  }
+
+  .search-tipo-label {
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  .radio-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    color: var(--white);
+    font-weight: 500;
+    user-select: none;
+  }
+
+  .radio-pill input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .radio-mark {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 50%;
+    background: transparent;
+    display: inline-block;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .radio-pill input[type="radio"]:checked + .radio-mark {
+    border-color: #2563EB;
+    background: #2563EB;
+  }
+
+  .radio-pill input[type="radio"]:checked + .radio-mark::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    background: var(--white);
+    border-radius: 50%;
+  }
+
+  /* ── AUTOCOMPLETE ── */
+  .autocomplete-wrap {
+    position: relative;
+  }
+
+  .autocomplete-list {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -0.9rem;
+    right: -0.9rem;
+    background: var(--white);
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.18);
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 200;
+    padding: 0.4rem 0;
+  }
+
+  .autocomplete-list.open { display: block; }
+
+  .autocomplete-item {
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    color: #0F172A;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    transition: background 0.12s;
+  }
+
+  .autocomplete-item:hover,
+  .autocomplete-item.active {
+    background: #EFF6FF;
+    color: #1D4ED8;
+  }
+
+  .autocomplete-item .ac-code {
+    font-size: 0.75rem;
+    color: #64748B;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .autocomplete-empty {
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    color: #94A3B8;
+    text-align: center;
+  }
+
+  /* ── MODAL VUELO INFO ── */
+  .modal-vuelo-info {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(200,146,58,0.18);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .vuelo-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .vuelo-info-label {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .vuelo-info-value {
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  /* ── FLATPICKR OVERRIDES ── */
+  .flatpickr-calendar {
+    background: var(--green) !important;
+    border: 1px solid rgba(200,146,58,0.3) !important;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.5) !important;
+    border-radius: 12px !important;
+  }
+
+  .flatpickr-calendar.arrowTop:before,
+  .flatpickr-calendar.arrowTop:after {
+    border-bottom-color: var(--green) !important;
+  }
+
+  .flatpickr-months,
+  .flatpickr-month,
+  .flatpickr-current-month,
+  .flatpickr-monthDropdown-months,
+  .flatpickr-weekday {
+    background: var(--green) !important;
+    color: var(--cream) !important;
+    fill: var(--cream) !important;
+  }
+
+  .flatpickr-prev-month svg,
+  .flatpickr-next-month svg {
+    fill: var(--gold) !important;
+  }
+
+  .flatpickr-day {
+    color: var(--cream) !important;
+  }
+
+  .flatpickr-day.flatpickr-disabled {
+    color: rgba(154,176,158,0.35) !important;
+  }
+
+  .flatpickr-day:hover {
+    background: rgba(200,146,58,0.18) !important;
+    border-color: transparent !important;
+  }
+
+  .flatpickr-day.selected,
+  .flatpickr-day.startRange,
+  .flatpickr-day.endRange {
+    background: var(--gold) !important;
+    border-color: var(--gold) !important;
+    color: var(--dark) !important;
+  }
+
+  .flatpickr-day.inRange {
+    background: rgba(200,146,58,0.25) !important;
+    border-color: transparent !important;
+    box-shadow: -5px 0 0 rgba(200,146,58,0.25), 5px 0 0 rgba(200,146,58,0.25) !important;
+  }
+
+  .flatpickr-day.today {
+    border-color: var(--gold-light) !important;
+  }
+
+  /* ── RESPONSIVE BUSCADOR ── */
+  @media (max-width: 980px) {
+    .hero { padding-bottom: 480px; }
+    .search-bar { flex-wrap: wrap; }
+    .search-pill { flex: 1 1 calc(50% - 0.5rem); }
+    .search-swap-btn { order: 99; }
+    .search-submit { flex: 1 1 100%; padding: 0.9rem; }
+  }
+
+  @media (max-width: 560px) {
+    .hero { padding-bottom: 620px; }
+    .search-pill { flex: 1 1 100%; }
+    .search-tipo { flex-wrap: wrap; }
   }
 
   /* ── FOOTER ── */
